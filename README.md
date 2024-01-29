@@ -13,5 +13,7 @@ pip install -r requirements.txt
 bin/python app.py
 ```
 ## Docker
-`git clone https://github.com/hoolies/TeplateTester/`
-`bash deploy.sh`
+```
+git clone https://github.com/hoolies/TeplateTester/
+bash deploy.sh
+```
