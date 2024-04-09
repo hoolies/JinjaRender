@@ -1,15 +1,23 @@
 """This script will render a Jinja Template with a Json file"""
-import cherrypy
-import json
-from os.path import abspath
-from jinja2 import Environment, FileSystemLoader
+"""This script is made by xrouvell in order to test Jinja2 templates with CherryPy (like SoL)"""
+from cherrypy import config, expose, quickstart
+from json import loads
+from jinja2 import Environment
 
 class SiteGenerator:
-    def __init__(self, template_dir='templates'):
-        self.template_env = Environment(loader=FileSystemLoader(template_dir))
+    def __init__(self):
+        self.template_env = Environment() 
         self.generated_html = None
+        self.cherrypy_config = config.update({
+            'server.socket_host': '0.0.0.0',                # Keep in mind 0.0.0.0 allows everyone even public IP, use 127.0.0.0/8 if you want local
+            'server.socket_port': 44380,                    # Feel free to change the port
+            'server.thread_pool': 8,                        # How many concurrent connection you support
+            'server.protocol_version': 'HTTP/1.1',
+            'server.ssl_module':'builtin',                  # If we want to host it in the future we can have an ssl certificate
+            })
 
-    @cherrypy.expose
+
+    @expose
     def index(self):
         return """
         <html>
@@ -57,12 +65,12 @@ class SiteGenerator:
         </html>
         """
 
-    @cherrypy.expose
+    @expose
     def generate_site(self, template, json_file):
       try:
-        # Check if it is a valid JSON file
-        json_data = json.loads(json_file)
-        # Check if it is a valid Jinja2 template
+        # Check if the JSON file is valid
+        json_data = loads(json_file)
+        # Check if Jinja template is valid
         template = self.template_env.from_string(template)
         # Render the template with the JSON data
         self.generated_html = template.render(json_data)
@@ -74,23 +82,10 @@ class SiteGenerator:
         return f"Error: {e}"
 
 
-    @cherrypy.expose
-    def get_generated_site(self):
-        if self.generated_html:
-            return self.generated_html
-        else:
-            return "Could not generate the site, check your input data."
+def main():
+    # Quick loads the site through the Class
+    quickstart(SiteGenerator())
+
 
 if __name__ == '__main__':
-
-    # Configure CherryPy server
-    cherrypy.config.update({
-        'server.socket_host': '0.0.0.0',                # Keep in mind 0.0.0.0 allows everyone even public IP, use 127.0.0.0/8 if you want local
-        'server.socket_port': 44380,                    # Feel free to change the port
-        'server.thread_pool': 8,                        # How many concurrent connection you support
-        'server.protocol_version': 'HTTP/1.1',
-        'server.ssl_module':'builtin',
-        })
-
-    # Quick loads the site through the Class
-    cherrypy.quickstart(SiteGenerator())
+    main()
