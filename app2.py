@@ -1,5 +1,4 @@
 """This script will render a Jinja Template with a Json file"""
-"""This script is made by xrouvell in order to test Jinja2 templates with CherryPy (like SoL)"""
 from cherrypy import config, expose, quickstart
 from json import loads
 from jinja2 import Environment
