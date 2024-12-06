@@ -5,7 +5,7 @@ from jinja2 import Environment
 
 class SiteGenerator:
     def __init__(self):
-        self.template_env = Environment() 
+        self.template_env = Environment()
         self.generated_html = None
         self.cherrypy_config = config.update({
             'server.socket_host': '0.0.0.0',                # Keep in mind 0.0.0.0 allows everyone even public IP, use 127.0.0.0/8 if you want local
