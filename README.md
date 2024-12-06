@@ -7,13 +7,12 @@ You have 2 options:
 ## Python
 ```
 git clone https://github.com/hoolies/JinjaRender/
-python -m venv JinjaRender
-cd JinjaRender
+python -m venv .
 pip install -r requirements.txt
 bin/python app.py
 ```
 ## Docker
 ```
 git clone https://github.com/hoolies/JinjaRender/
-bash deploy.sh
+bash ./build/deploy.sh
 ```
